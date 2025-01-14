@@ -1,3 +1,12 @@
+"""
+============================================
+Langchain based tulu3
+
+- 이전 답변을 기억
+- 스트리밍 형태로 작성
+============================================
+"""
+
 import gradio as gr
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
@@ -16,22 +25,51 @@ message_history = [
 ]
 
 # 응답 생성 함수
+def generateResponseStreaming(user_input):
+    # 사용자 입력을 메시지 기록에 추가
+    message_history.append({
+        "role": "user", 
+        "content": user_input
+    })
+    
+    # Ollama 모델 호출
+    response = llmModel.stream(message_history)
+    answer = ""
+    for chunk in response:
+        answer += chunk
+        yield answer
+
+    # 응답을 메시지 기록에 추가
+    message_history.append({
+        "role": "assistant", 
+        "content": answer
+    })
+    
+    return answer
+
+# 응답 생성 함수
 def generateResponse(user_input):
     # 사용자 입력을 메시지 기록에 추가
-    message_history.append({"role": "user", "content": user_input})
+    message_history.append({
+        "role": "user", 
+        "content": user_input
+    })
     
     # Ollama 모델 호출
     response = llmModel.invoke(message_history)
     
     # 응답을 메시지 기록에 추가
-    message_history.append({"role": "assistant", "content": response})
+    message_history.append({
+        "role": "assistant", 
+        "content": response
+    })
     
     return response
 
 # Gradio 인터페이스 설정
 def get_model_by_tulu3_langchain():
     return gr.Interface(
-        fn=generateResponse,
+        fn=generateResponseStreaming,
         inputs=gr.Textbox(elem_id='custom_input'),
         outputs=gr.Markdown(elem_id='custom_output'),
         title="Tulu3 8B",
