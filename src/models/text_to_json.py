@@ -8,7 +8,7 @@ json파일에 입력될 수 있도록, 한 줄로 변환해드립니다.
 """
 import gradio as gr
 import json
-from src.models.css import get_css
+from src.utils.utils import get_css
 
 def ai_response(input : str):
     output = json.dumps(input, ensure_ascii=False)

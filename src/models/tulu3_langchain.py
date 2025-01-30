@@ -9,8 +9,8 @@ Langchain based tulu3
 
 import gradio as gr
 from langchain_ollama.llms import OllamaLLM
-from langchain_core.prompts import ChatPromptTemplate
-from src.models.css import get_css
+from src.utils.utils import get_css
+
 
 # 모델 설정
 model_name = "tulu3"
@@ -24,7 +24,7 @@ message_history = [
     }
 ]
 
-# 응답 생성 함수
+# 응답 생성 함수 (Streaming)
 def generateResponseStreaming(user_input):
     # 사용자 입력을 메시지 기록에 추가
     message_history.append({

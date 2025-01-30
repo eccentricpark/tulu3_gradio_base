@@ -8,7 +8,7 @@ json 형식의 문자열열은 모두 한 줄로 입력 돼 있습니다.
 """
 import gradio as gr
 import json
-from src.models.css import get_css
+from src.utils.utils import get_css
 
 def response(input: str):
     try:
